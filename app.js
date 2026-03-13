@@ -1,4 +1,4 @@
-const API_BASE = "https://vidgrab-api.onrender.com";
+const API_BASE = "https://vidgrab-backend-b0nv.onrender.com";
 
 const urlInput = document.getElementById("urlInput");
 const analyzeButton = document.getElementById("analyzeButton");
