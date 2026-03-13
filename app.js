@@ -1,6 +1,7 @@
 const API_BASE = "https://vidgrab-backend-b0nv.onrender.com";
 
 const urlInput = document.getElementById("urlInput");
+const clearInput = document.getElementById("clearInput");
 const analyzeButton = document.getElementById("analyzeButton");
 const previewSection = document.getElementById("previewSection");
 const progressSection = document.getElementById("progressSection");
@@ -10,6 +11,7 @@ const videoDuration = document.getElementById("videoDuration");
 const platformBadge = document.getElementById("platformBadge");
 const qualityTabs = document.getElementById("qualityTabs");
 const downloadButton = document.getElementById("downloadButton");
+const downloadAudioButton = document.getElementById("downloadAudioButton");
 const progressFill = document.getElementById("progressFill");
 const progressPercent = document.getElementById("progressPercent");
 const progressStatus = document.getElementById("progressStatus");
@@ -32,12 +34,10 @@ let progressStream = null;
 let activeJobId = null;
 
 const PLATFORM_COLORS = {
-  YouTube: "#ef4444",
   TikTok: "#22d3ee",
   Instagram: "#f97316",
   "Twitter / X": "#60a5fa",
   Facebook: "#3b82f6",
-  Twitch: "#a855f7",
   Threads: "#e2e8f0",
 };
 
@@ -74,9 +74,16 @@ const setLoadingPreview = (loading) => {
 };
 
 const renderQualities = (available) => {
+  if (!available || !available.length) {
+    available = ["360p"];
+  }
+  if (!available.includes(selectedQuality)) {
+    selectedQuality = available[0];
+  }
   qualityTabs.innerHTML = "";
   QUALITIES.forEach((quality) => {
     const pill = document.createElement("button");
+    pill.type = "button";
     pill.className = "quality-pill";
     pill.textContent = quality === "2160p" ? "4K" : quality;
     if (!available.includes(quality)) {
@@ -175,7 +182,7 @@ const downloadFile = async (jobId) => {
   const url = window.URL.createObjectURL(blob);
   const a = document.createElement("a");
   a.href = url;
-  a.download = progressFilename.textContent || "video.mp4";
+  a.download = progressFilename.textContent || "archivo";
   document.body.appendChild(a);
   a.click();
   a.remove();
@@ -216,18 +223,26 @@ const fetchInfo = async () => {
   }
 };
 
-const startDownload = async () => {
+const startDownload = async (mode) => {
   if (!currentInfo) {
     showToast("Primero analiza un enlace.", true);
     return;
   }
+  const quality = mode === "mp3" ? "mp3" : selectedQuality;
+  const label = mode === "mp3" ? "MP3" : selectedQuality;
+  const confirmText =
+    mode === "mp3"
+      ? "¿Quieres descargar solo el audio en MP3?"
+      : `¿Quieres descargar el video en ${selectedQuality}?`;
+  if (!window.confirm(confirmText)) return;
+
   progressSection.classList.remove("hidden");
   updateProgress(0, "Preparando descarga...");
   try {
     const response = await fetch(`${API_BASE}/download`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ url: urlInput.value.trim(), quality: selectedQuality }),
+      body: JSON.stringify({ url: urlInput.value.trim(), quality }),
     });
     if (response.status === 503 || response.status === 504) {
       showToast("Despertando servidor, espera ~30s...", true);
@@ -242,7 +257,7 @@ const startDownload = async () => {
     progressFilename.textContent = data.filename;
     startProgressStream(activeJobId, async () => {
       await downloadFile(activeJobId);
-      pushHistory(currentInfo, selectedQuality);
+      pushHistory(currentInfo, label);
       updateProgress(100, "¡Listo!");
     });
   } catch (error) {
@@ -265,8 +280,14 @@ const wakeUpServer = async () => {
   }
 };
 
+clearInput.addEventListener("click", () => {
+  urlInput.value = "";
+  urlInput.focus();
+});
+
 analyzeButton.addEventListener("click", fetchInfo);
-downloadButton.addEventListener("click", startDownload);
+downloadButton.addEventListener("click", () => startDownload("mp4"));
+downloadAudioButton.addEventListener("click", () => startDownload("mp3"));
 cancelButton.addEventListener("click", () => {
   if (progressStream) {
     progressStream.close();
