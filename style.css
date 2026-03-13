@@ -596,14 +596,10 @@ main {
 
   .history-panel {
     width: 100%;
-  }
-}
-@media (max-width: 600px) {
-  .history-panel {
-    width: 100%;
     right: -100%;
   }
 
+  
   .history-panel.open {
     right: 0;
   }
