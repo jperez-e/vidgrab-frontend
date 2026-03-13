@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>VidGrab - Descarga videos de cualquier red social</title>
+    <meta
+      name="description"
+      content="VidGrab permite descargar videos de redes sociales en MP4 con audio, rápido y sin registros."
+    />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body>
+    <div class="bg-animated"></div>
+    <div class="noise-layer"></div>
+
+    <header class="site-header">
+      <div class="logo">
+        <svg
+          width="28"
+          height="28"
+          viewBox="0 0 28 28"
+          fill="none"
+          xmlns="http://www.w3.org/2000/svg"
+          aria-hidden="true"
+        >
+          <rect x="2" y="2" width="24" height="24" rx="8" class="logo-bg" />
+          <path
+            d="M11 9.5C11 8.67 11.9 8.16 12.6 8.58L18 12.08C18.67 12.5 18.67 13.5 18 13.92L12.6 17.42C11.9 17.84 11 17.33 11 16.5V9.5Z"
+            class="logo-play"
+          />
+        </svg>
+        <div>
+          <div class="logo-text">VidGrab</div>
+          <div class="logo-tagline">Descarga videos de cualquier red social</div>
+        </div>
+      </div>
+      <button class="btn ghost" id="historyButton" type="button">Historial</button>
+    </header>
+
+    <main>
+      <section class="hero">
+        <div class="hero-content">
+          <h1>Convierte enlaces en MP4 con audio en segundos</h1>
+          <p>
+            Analiza un link, elige la calidad y descarga. Sin registro, sin
+            limitaciones innecesarias.
+          </p>
+          <div class="input-card">
+            <input
+              id="urlInput"
+              type="url"
+              placeholder="Pega el enlace aquí..."
+              autocomplete="off"
+              spellcheck="false"
+            />
+            <button class="btn primary" id="analyzeButton" type="button">
+              <span class="btn-icon">🔎</span>
+              Analizar
+            </button>
+          </div>
+          <div class="chips">
+            <span class="chip">
+              <img src="assets/icons/youtube.svg" alt="YouTube" />
+              YouTube
+            </span>
+            <span class="chip">
+              <img src="assets/icons/tiktok.svg" alt="TikTok" />
+              TikTok
+            </span>
+            <span class="chip">
+              <img src="assets/icons/instagram.svg" alt="Instagram" />
+              Instagram
+            </span>
+            <span class="chip">
+              <img src="assets/icons/x.svg" alt="X" />
+              Twitter / X
+            </span>
+            <span class="chip">
+              <img src="assets/icons/facebook.svg" alt="Facebook" />
+              Facebook
+            </span>
+            <span class="chip">
+              <img src="assets/icons/twitch.svg" alt="Twitch" />
+              Twitch
+            </span>
+            <span class="chip">
+              <img src="assets/icons/threads.svg" alt="Threads" />
+              Threads
+            </span>
+          </div>
+          <div class="platform-notes">
+            <span>Instagram: solo contenido público.</span>
+            <span>Threads: solo videos públicos.</span>
+          </div>
+        </div>
+      </section>
+
+      <section class="preview-section hidden" id="previewSection">
+        <div class="preview-card">
+          <div class="preview-media">
+            <div class="skeleton shimmer" id="thumbSkeleton"></div>
+            <img id="videoThumbnail" alt="Thumbnail del video" />
+          </div>
+          <div class="preview-info">
+            <div class="skeleton shimmer title-skeleton" id="titleSkeleton"></div>
+            <h2 id="videoTitle"></h2>
+            <div class="meta">
+              <span class="duration" id="videoDuration">00:00</span>
+              <span class="badge" id="platformBadge">Plataforma</span>
+            </div>
+            <div class="quality-tabs" id="qualityTabs"></div>
+            <button class="btn primary large" id="downloadButton" type="button">
+              Descargar MP4
+            </button>
+          </div>
+        </div>
+      </section>
+
+      <section class="progress-section hidden" id="progressSection">
+        <div class="progress-card">
+          <div class="progress-header">
+            <div>
+              <div class="progress-filename" id="progressFilename">video.mp4</div>
+              <div class="progress-status" id="progressStatus">Descargando...</div>
+            </div>
+            <button class="btn ghost small" id="cancelButton" type="button">
+              Cancelar
+            </button>
+          </div>
+          <div class="progress-bar">
+            <div class="progress-fill" id="progressFill"></div>
+          </div>
+          <div class="progress-percent" id="progressPercent">0%</div>
+        </div>
+      </section>
+
+      <section class="platforms">
+        <h3>Plataformas soportadas</h3>
+        <div class="platform-grid">
+          <div class="platform-card">
+            <img src="assets/icons/youtube.svg" alt="YouTube" />
+            <div class="platform-name">YouTube</div>
+            <div class="platform-status">Soportado ✓</div>
+          </div>
+          <div class="platform-card">
+            <img src="assets/icons/tiktok.svg" alt="TikTok" />
+            <div class="platform-name">TikTok</div>
+            <div class="platform-status">Soportado ✓</div>
+          </div>
+          <div class="platform-card">
+            <img src="assets/icons/instagram.svg" alt="Instagram" />
+            <div class="platform-name">Instagram</div>
+            <div class="platform-status">Soportado ✓</div>
+          </div>
+          <div class="platform-card">
+            <img src="assets/icons/x.svg" alt="X" />
+            <div class="platform-name">Twitter / X</div>
+            <div class="platform-status">Soportado ✓</div>
+          </div>
+          <div class="platform-card">
+            <img src="assets/icons/facebook.svg" alt="Facebook" />
+            <div class="platform-name">Facebook</div>
+            <div class="platform-status">Soportado ✓</div>
+          </div>
+          <div class="platform-card">
+            <img src="assets/icons/twitch.svg" alt="Twitch" />
+            <div class="platform-name">Twitch</div>
+            <div class="platform-status">Soportado ✓</div>
+          </div>
+          <div class="platform-card">
+            <img src="assets/icons/threads.svg" alt="Threads" />
+            <div class="platform-name">Threads</div>
+            <div class="platform-status">Soportado ✓</div>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <aside class="history-panel" id="historyPanel">
+      <div class="history-header">
+        <h3>Historial</h3>
+        <button class="btn ghost small" id="closeHistory" type="button">
+          Cerrar
+        </button>
+      </div>
+      <div class="history-list" id="historyList"></div>
+      <button class="btn danger" id="clearHistory" type="button">
+        Limpiar historial
+      </button>
+    </aside>
+
+    <div class="toast" id="toast"></div>
+    <div class="banner hidden" id="wakeBanner">Iniciando servidor...</div>
+
+    <footer class="site-footer">
+      <div>VidGrab · Uso personal y educativo</div>
+      <div>Repositorio en GitHub</div>
+    </footer>
+
+    <script src="app.js"></script>
+  </body>
+</html>
